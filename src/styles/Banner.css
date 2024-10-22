@@ -1,14 +1,84 @@
+/* General styling for the banner */
 .banner {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
+  height: 400px; /* Ajusta la altura del banner */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image container styling */
+.bannerimg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%); /* Oscurece la imagen de fondo para mejorar el contraste del texto */
+}
+
+/* Text container styling */
+.banner-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #ecf0f1; /* Light grey text */
+  padding: 20px;
+  max-width: 800px; /* Limitar el ancho máximo del texto */
+}
+
+/* Banner heading */
+.banner-text h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra de texto para mayor contraste */
+}
+
+/* Banner paragraph */
+.banner-text p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-top: 0;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Sombra de texto más ligera */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .banner {
     height: 300px;
-    /* background: url('/images/banner.jpg') no-repeat center center/cover; */
   }
-  
-  .banner-text {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    color: white;
+
+  .banner-text h1 {
+    font-size: 2rem;
   }
-  
+
+  .banner-text p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner {
+    height: 250px;
+  }
+
+  .banner-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .banner-text p {
+    font-size: 0.9rem;
+  }
+}

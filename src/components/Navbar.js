@@ -23,7 +23,6 @@ function Navbar() {
         <i className="fas fa-shopping-cart"></i> Carrito
       </div>
 
-      {/* Hamburger Menu Icon */}
       <div className="hamburger" onClick={toggleMenu}>
         <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
       </div>
