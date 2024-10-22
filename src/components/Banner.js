@@ -4,7 +4,7 @@ import '../styles/Banner.css';
 function Banner() {
   return (
     <div className="banner">
-      <div className='bannerimg' style={{height: "200px"}}>
+      <div className='bannerimg' style={{height: "400px"}}>
         <img src="/images/banner.jpg" alt="Promoción" className="banner-img" />
       </div>
       <div className="banner-text">

@@ -13,8 +13,8 @@ function Navbar() {
       <div className="navbar-logo">Clean Store</div>
       
       <ul className={`navbar-links ${isMenuOpen ? 'active' : ''}`}>
-        <li><a href="#home">Inicio</a></li>
-        <li><a href="#categories">Categorías</a></li>
+        <li><a href="/pages/Home.js">Inicio</a></li>
+        <li><a href="/pages/Registro.js">Categorías</a></li>
         <li><a href="#featured">Destacados</a></li>
         <li><a href="#contact">Contacto</a></li>
       </ul>
