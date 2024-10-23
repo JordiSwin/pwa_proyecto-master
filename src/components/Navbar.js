@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
-import '../styles/Navbar.css';
+import React from 'react';
+import { auth } from '../firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  // Función para cerrar la sesión
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      alert('Has cerrado sesión correctamente');
+      navigate('/login'); // Redirige al usuario a la página de inicio de sesión
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      alert('Hubo un error al cerrar sesión');
+    }
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-logo">Clean Store</div>
-      
-      <ul className={`navbar-links ${isMenuOpen ? 'active' : ''}`}>
-        <li><a href="/pages/Home.js">Inicio</a></li>
-        <li><a href="/pages/Registro.js">Categorías</a></li>
-        <li><a href="#featured">Destacados</a></li>
-        <li><a href="#contact">Contacto</a></li>
-      </ul>
-
-      <div className="navbar-cart">
-        <i className="fas fa-shopping-cart"></i> Carrito
-      </div>
-
-      <div className="hamburger" onClick={toggleMenu}>
-        <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+    <nav>
+      <h2>Mi Tienda PWA</h2>
+      <div>
+        {auth.currentUser ? (
+          <button onClick={handleLogout}>Cerrar Sesión</button>
+        ) : (
+          <>
+            <button onClick={() => navigate('/login')}>Iniciar Sesión</button>
+            <button onClick={() => navigate('/register')}>Registrarse</button>
+          </>
+        )}
       </div>
     </nav>
   );
