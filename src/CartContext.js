@@ -1,42 +1,29 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { auth, db } from './firebaseConfig';
-import { collection, addDoc, onSnapshot, query, where } from 'firebase/firestore';
+import React, { createContext, useState } from 'react';
 
+// Crear el contexto del carrito
 export const CartContext = createContext();
 
+// Proveedor del contexto del carrito
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
-  useEffect(() => {
-    if (auth.currentUser) {
-      const q = query(
-        collection(db, 'carts'),
-        where('userId', '==', auth.currentUser.uid)
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const userCart = snapshot.docs.map((doc) => doc.data());
-        setCart(userCart);
-      });
-      return () => unsubscribe();
-    }
-  }, [auth.currentUser]);
+  // Función para agregar productos al carrito
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
 
-  const addToCart = async (product) => {
-    if (auth.currentUser) {
-      try {
-        await addDoc(collection(db, 'carts'), {
-          ...product,
-          userId: auth.currentUser.uid,
-        });
-        alert('Producto agregado al carrito');
-      } catch (error) {
-        console.error('Error al agregar al carrito:', error);
-      }
-    }
+  // Función para remover productos del carrito
+  const removeFromCart = (productId) => {
+    setCart(cart.filter((item) => item.id !== productId));
+  };
+
+  // Función para vaciar el carrito
+  const clearCart = () => {
+    setCart([]);
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
