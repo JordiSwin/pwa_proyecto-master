@@ -30,11 +30,19 @@ function Navbar() {
       <div className="navbar-buttons">
         {auth.currentUser ? (
           <>
-            <button onClick={handleLogout} className="navbar-btn logout-btn">
-              Cerrar Sesión
+            {/* Botón para subir producto */}
+            <button onClick={() => navigate('/upload')} className="navbar-btn upload-btn">
+              Subir Producto
             </button>
+
+            {/* Botón para el carrito */}
             <button onClick={() => navigate('/cart')} className="navbar-btn cart-btn">
               🛒 ({totalItems})
+            </button>
+
+            {/* Botón para cerrar sesión */}
+            <button onClick={handleLogout} className="navbar-btn logout-btn">
+              Cerrar Sesión
             </button>
           </>
         ) : (

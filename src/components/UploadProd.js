@@ -16,14 +16,22 @@ function ProductForm() {
     console.log('Precio:', productPrice);
     console.log('Imagen:', productImage);
 
-    // Lógica para subir a la base de datos o servidor
-    // ...
 
     alert('Producto subido correctamente');
   };
 
   return (
     <div className="product-form-container">
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
       <h2>Subir Nuevo Producto</h2>
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">

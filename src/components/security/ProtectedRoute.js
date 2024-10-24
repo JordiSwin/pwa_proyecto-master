@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { auth } from '../firebaseConfig'; // Firebase authentication
+import { auth } from '../../firebaseConfig'; // Firebase authentication
 
 function ProtectedRoute({ children }) {
   if (!auth.currentUser) {
