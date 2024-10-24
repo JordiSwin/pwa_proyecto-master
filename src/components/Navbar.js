@@ -25,6 +25,7 @@ function Navbar() {
       navigate('/login');
     } else {
       navigate('/cart');
+      navigate('/components/subirprod')
     }
   };
 
@@ -38,6 +39,9 @@ function Navbar() {
           <>
             <button onClick={handleCartClick} className="navbar-btn cart-btn">
               Carrito
+            </button>
+            <button onClick={handleCartClick} className="navbar-btn cart-btn">
+              Subir Producto
             </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión
