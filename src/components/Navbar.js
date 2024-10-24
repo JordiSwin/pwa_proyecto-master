@@ -18,6 +18,16 @@ function Navbar() {
     }
   };
 
+  // Función para navegar al carrito si está autenticado
+  const handleCartClick = () => {
+    if (!auth.currentUser) {
+      alert('Debes iniciar sesión para acceder al carrito.');
+      navigate('/login');
+    } else {
+      navigate('/cart');
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-logo" onClick={() => navigate('/')}>
@@ -25,9 +35,14 @@ function Navbar() {
       </div>
       <div className="navbar-buttons">
         {auth.currentUser ? (
-          <button onClick={handleLogout} className="navbar-btn logout-btn">
-            Cerrar Sesión
-          </button>
+          <>
+            <button onClick={handleCartClick} className="navbar-btn cart-btn">
+              Carrito
+            </button>
+            <button onClick={handleLogout} className="navbar-btn logout-btn">
+              Cerrar Sesión
+            </button>
+          </>
         ) : (
           <>
             <button
