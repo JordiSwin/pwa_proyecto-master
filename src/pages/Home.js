@@ -18,26 +18,18 @@ function Home() {
   };
 
   const mostSearchedProducts = [
-    { name: 'Detergente Líquido', price: 50, image: '/images/detergente.jpg' },
-    { name: 'Desinfectante Multiusos', price: 70, image: '/images/desinfectante.jpg' },
-    { name: 'Escoba Duradera', price: 25, image: '/images/escoba.jpg' },
+    { id: 1, name: 'Detergente Líquido', price: 50, image: '/images/detergente.jpg' },
+    { id: 2, name: 'Desinfectante Multiusos', price: 70, image: '/images/desinfectante.jpg' },
+    { id: 3, name: 'Escoba Duradera', price: 25, image: '/images/escoba.jpg' },
   ];
 
   const otherProducts = [
-    { name: 'Trapo de Microfibra', price: 15, image: '/images/trapo.jpg' },
-    { name: 'Jabón Líquido', price: 30, image: '/images/jabon.jpg' },
+    { id: 4, name: 'Trapo de Microfibra', price: 15, image: '/images/trapo.jpg' },
+    { id: 5, name: 'Jabón Líquido', price: 30, image: '/images/jabon.jpg' },
   ];
 
   return (
     <div className="home-container">
-      {/* Banner */}
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
       <div className="banner">
         <img src="/images/banner.jpg" alt="Promoción" className="banner-img" />
         <div className="banner-text">
@@ -46,7 +38,6 @@ function Home() {
         </div>
       </div>
 
-      {/* Sección de productos más buscados */}
       <div className="most-searched">
         <h2>Productos Más Buscados</h2>
         <div className="products-list">
@@ -61,7 +52,6 @@ function Home() {
         </div>
       </div>
 
-      {/* Sección de otros productos */}
       <div className="other-products">
         <h2>Otros Productos</h2>
         <div className="products-list">

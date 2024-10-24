@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Navbar from './components/Navbar';
+import Cart from './components/Cart'; // Importa la página del carrito
 import { auth } from './firebaseConfig';
 import { CartProvider } from './CartContext';
 
@@ -21,11 +22,12 @@ function App() {
   return (
     <CartProvider>
       <Router>
-        <Navbar /> {/* Aquí se incluye el componente de navegación */}
+        <Navbar /> {/* Componente de navegación */}
         <Routes>
           <Route path="/" element={user ? <Home /> : <Navigate to="/login" replace />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/cart" element={<Cart />} /> {/* Ruta para el carrito */}
         </Routes>
       </Router>
     </CartProvider>
