@@ -1,12 +1,37 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../CartContext';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
 import '../styles/Home.css';
 
 function Home() {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]); // Estado para los productos
+  const [loading, setLoading] = useState(true); // Estado de carga
+
+  // Función para obtener los productos de Firestore
+  const fetchProducts = async () => {
+    try {
+      const productsCollection = collection(db, 'productos');
+      const productsSnapshot = await getDocs(productsCollection);
+      const productsList = productsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(productsList);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al obtener los productos:', error);
+      setLoading(false);
+    }
+  };
+
+  // Usar useEffect para obtener los productos al cargar el componente
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleAddToCart = (product) => {
     if (!auth.currentUser) {
@@ -16,17 +41,6 @@ function Home() {
       alert('Producto agregado al carrito');
     }
   };
-
-  const mostSearchedProducts = [
-    { id: 1, name: 'Detergente Líquido', price: 50, image: '/images/detergente.jpg' },
-    { id: 2, name: 'Desinfectante Multiusos', price: 70, image: '/images/desinfectante.jpg' },
-    { id: 3, name: 'Escoba Duradera', price: 25, image: '/images/escoba.jpg' },
-  ];
-
-  const otherProducts = [
-    { id: 4, name: 'Trapo de Microfibra', price: 15, image: '/images/trapo.jpg' },
-    { id: 5, name: 'Jabón Líquido', price: 30, image: '/images/jabon.jpg' },
-  ];
 
   return (
     <div className="home-container">
@@ -38,33 +52,27 @@ function Home() {
         </div>
       </div>
 
-      <div className="most-searched">
-        <h2>Productos Más Buscados</h2>
+      {loading ? (
+        <p>Cargando productos...</p>
+      ) : (
         <div className="products-list">
-          {mostSearchedProducts.map((product, index) => (
-            <div key={index} className="product-card">
-              <img src={product.image} alt={product.name} />
-              <h3>{product.name}</h3>
-              <p>Precio: ${product.price}</p>
-              <button onClick={() => handleAddToCart(product)}>Agregar al Carrito</button>
-            </div>
-          ))}
+          {products.length === 0 ? (
+            <p>No hay productos disponibles.</p>
+          ) : (
+            products.map((product) => (
+              <div key={product.id} className="product-card">
+                <img src={product.imageUrl} alt={product.name} />
+                <h3>{product.name}</h3>
+                <p>{product.description}</p>
+                <p>Precio: ${product.price}</p>
+                <button onClick={() => handleAddToCart(product)}>
+                  Agregar al Carrito
+                </button>
+              </div>
+            ))
+          )}
         </div>
-      </div>
-
-      <div className="other-products">
-        <h2>Otros Productos</h2>
-        <div className="products-list">
-          {otherProducts.map((product, index) => (
-            <div key={index} className="product-card">
-              <img src={product.image} alt={product.name} />
-              <h3>{product.name}</h3>
-              <p>Precio: ${product.price}</p>
-              <button onClick={() => handleAddToCart(product)}>Agregar al Carrito</button>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

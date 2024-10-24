@@ -30,33 +30,23 @@ function Navbar() {
       <div className="navbar-buttons">
         {auth.currentUser ? (
           <>
-            {/* Botón para subir producto */}
-            <button onClick={() => navigate('/upload')} className="navbar-btn upload-btn">
-              Subir Producto
-            </button>
-
-            {/* Botón para el carrito */}
             <button onClick={() => navigate('/cart')} className="navbar-btn cart-btn">
               🛒 ({totalItems})
             </button>
-
-            {/* Botón para cerrar sesión */}
+            {/* Botón para redirigir al formulario de productos */}
+            <button onClick={() => navigate('/upload')} className="navbar-btn upload-btn">
+              ➕ Subir Producto
+            </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión
             </button>
           </>
         ) : (
           <>
-            <button
-              onClick={() => navigate('/login')}
-              className="navbar-btn login-btn"
-            >
+            <button onClick={() => navigate('/login')} className="navbar-btn login-btn">
               Iniciar Sesión
             </button>
-            <button
-              onClick={() => navigate('/register')}
-              className="navbar-btn register-btn"
-            >
+            <button onClick={() => navigate('/register')} className="navbar-btn register-btn">
               Registrarse
             </button>
           </>

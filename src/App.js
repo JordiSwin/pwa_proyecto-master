@@ -8,7 +8,6 @@ import Cart from './components/Cart'; // Importa la página del carrito
 import { auth } from './firebaseConfig';
 import { CartProvider } from './CartContext';
 import UploadProducto from './components/UploadProd';
-import ProtectedRoute from './components/security/ProtectedRoute'; 
 
 
 function App() {

@@ -1,37 +1,61 @@
 import React, { useState } from 'react';
-import '../styles/ProductForm.css'; // Asumiendo que vas a agregar estilos personalizados
+import { db, storage } from '../firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import '../styles/ProductForm.css';
 
 function ProductForm() {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productImage, setProductImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Aquí puedes manejar el envío del formulario
-    console.log('Nombre:', productName);
-    console.log('Descripción:', productDescription);
-    console.log('Precio:', productPrice);
-    console.log('Imagen:', productImage);
 
+    if (!productImage) {
+      alert('Por favor, selecciona una imagen.');
+      return;
+    }
 
-    alert('Producto subido correctamente');
+    setIsLoading(true);
+
+    try {
+      // Crear una referencia única para la imagen en Firebase Storage
+      const imageRef = ref(storage, `productos/${productImage.name}`);
+
+      // Subir la imagen seleccionada a Firebase Storage
+      await uploadBytes(imageRef, productImage);
+
+      // Obtener la URL de descarga de la imagen subida
+      const imageUrl = await getDownloadURL(imageRef);
+
+      // Crear el documento del producto en Firestore
+      await addDoc(collection(db, 'productos'), {
+        name: productName,
+        description: productDescription,
+        price: parseFloat(productPrice),
+        imageUrl: imageUrl,
+      });
+
+      alert('Producto subido correctamente');
+
+      // Limpiar los campos del formulario
+      setProductName('');
+      setProductDescription('');
+      setProductPrice('');
+      setProductImage(null);
+    } catch (error) {
+      console.error('Error al subir el producto:', error);
+      alert('Hubo un error al subir el producto');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="product-form-container">
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-
       <h2>Subir Nuevo Producto</h2>
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">
@@ -80,7 +104,9 @@ function ProductForm() {
           />
         </div>
 
-        <button type="submit" className="submit-btn">Subir Producto</button>
+        <button type="submit" className="submit-btn" disabled={isLoading}>
+          {isLoading ? 'Subiendo...' : 'Subir Producto'}
+        </button>
       </form>
     </div>
   );
