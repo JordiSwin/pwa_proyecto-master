@@ -1,31 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Navbar.css'; // Asumiendo que vas a agregar estilos
+import { CartContext } from '../CartContext';
+import '../styles/Navbar.css';
 
 function Navbar() {
   const navigate = useNavigate();
+  const { cart } = useContext(CartContext);
 
-  // Función para cerrar la sesión
+  // Calcular el total de productos en el carrito
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   const handleLogout = async () => {
     try {
       await auth.signOut();
       alert('Has cerrado sesión correctamente');
-      navigate('/login'); // Redirige al usuario a la página de inicio de sesión
+      navigate('/login');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       alert('Hubo un error al cerrar sesión');
-    }
-  };
-
-  // Función para navegar al carrito si está autenticado
-  const handleCartClick = () => {
-    if (!auth.currentUser) {
-      alert('Debes iniciar sesión para acceder al carrito.');
-      navigate('/login');
-    } else {
-      navigate('/cart');
-      navigate('/components/subirprod')
     }
   };
 
@@ -37,14 +30,11 @@ function Navbar() {
       <div className="navbar-buttons">
         {auth.currentUser ? (
           <>
-            <button onClick={handleCartClick} className="navbar-btn cart-btn">
-              Carrito
-            </button>
-            <button onClick={handleCartClick} className="navbar-btn cart-btn">
-              Subir Producto
-            </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión
+            </button>
+            <button onClick={() => navigate('/cart')} className="navbar-btn cart-btn">
+              🛒 ({totalItems})
             </button>
           </>
         ) : (
