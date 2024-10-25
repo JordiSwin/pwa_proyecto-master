@@ -9,6 +9,7 @@ function ProductForm() {
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productImage, setProductImage] = useState(null);
+  const [productStock, setProductStock] = useState(''); // Nuevo estado para el stock
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -22,13 +23,11 @@ function ProductForm() {
     setIsLoading(true);
 
     try {
-      // Crear una referencia única para la imagen en Firebase Storage
+      // Subir la imagen a Firebase Storage
       const imageRef = ref(storage, `productos/${productImage.name}`);
-
-      // Subir la imagen seleccionada a Firebase Storage
       await uploadBytes(imageRef, productImage);
 
-      // Obtener la URL de descarga de la imagen subida
+      // Obtener la URL de descarga de la imagen
       const imageUrl = await getDownloadURL(imageRef);
 
       // Crear el documento del producto en Firestore
@@ -37,6 +36,7 @@ function ProductForm() {
         description: productDescription,
         price: parseFloat(productPrice),
         imageUrl: imageUrl,
+        stock: parseInt(productStock, 10), // Agregar stock
       });
 
       alert('Producto subido correctamente');
@@ -46,6 +46,7 @@ function ProductForm() {
       setProductDescription('');
       setProductPrice('');
       setProductImage(null);
+      setProductStock('');
     } catch (error) {
       console.error('Error al subir el producto:', error);
       alert('Hubo un error al subir el producto');
@@ -89,6 +90,18 @@ function ProductForm() {
             value={productPrice}
             onChange={(e) => setProductPrice(e.target.value)}
             placeholder="Introduce el precio"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="productStock">Stock del Producto</label>
+          <input
+            type="number"
+            id="productStock"
+            value={productStock}
+            onChange={(e) => setProductStock(e.target.value)}
+            placeholder="Introduce el stock disponible"
             required
           />
         </div>

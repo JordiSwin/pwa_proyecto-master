@@ -8,50 +8,50 @@ import '../styles/Home.css';
 function Home() {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]); // Estado para los productos
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Función para obtener los productos de Firestore
-  const fetchProducts = async () => {
-    try {
-      const productsCollection = collection(db, 'productos');
-      const productsSnapshot = await getDocs(productsCollection);
-      const productsList = productsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(productsList);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error al obtener los productos:', error);
-      setLoading(false);
-    }
-  };
-
-  // Usar useEffect para obtener los productos al cargar el componente
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const productsCollection = collection(db, 'productos');
+        const productsSnapshot = await getDocs(productsCollection);
+        const productsList = productsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productsList);
+      } catch (error) {
+        console.error('Error al obtener los productos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
   }, []);
 
+  const [quantity, setQuantity] = useState({}); // Estado para manejar la cantidad por producto
+
+  const handleQuantityChange = (productId, value) => {
+    setQuantity({
+      ...quantity,
+      [productId]: Math.min(Math.max(value, 1), products.find((p) => p.id === productId)?.stock),
+    });
+  };
+
   const handleAddToCart = (product) => {
     if (!auth.currentUser) {
-      navigate('/login'); // Redirigir a la página de login si no está autenticado
+      navigate('/login');
     } else {
-      addToCart(product);
-      alert('Producto agregado al carrito');
+      const selectedQuantity = quantity[product.id] || 1;
+      addToCart({ ...product, quantity: selectedQuantity });
+      alert(`Se agregó ${selectedQuantity} unidad(es) de ${product.name} al carrito`);
     }
   };
 
   return (
     <div className="home-container">
-      <div className="banner">
-        <img src="/images/banner.jpg" alt="Promoción" className="banner-img" />
-        <div className="banner-text">
-          <h1>Bienvenido a la Tienda de Limpieza</h1>
-          <p>Encuentra aquí los mejores productos de limpieza</p>
-        </div>
-      </div>
-
       {loading ? (
         <p>Cargando productos...</p>
       ) : (
@@ -65,7 +65,18 @@ function Home() {
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
                 <p>Precio: ${product.price}</p>
-                <button onClick={() => handleAddToCart(product)}>
+                <p>Stock: {product.stock}</p>
+                <input
+                  type="number"
+                  min="1"
+                  max={product.stock}
+                  value={quantity[product.id] || 1}
+                  onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value))}
+                />
+                <button
+                  onClick={() => handleAddToCart(product)}
+                  disabled={product.stock <= 0}
+                >
                   Agregar al Carrito
                 </button>
               </div>
