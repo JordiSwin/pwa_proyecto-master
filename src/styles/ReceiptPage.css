@@ -1,0 +1,52 @@
+.receipt-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+  }
+  
+  .receipt-details {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .receipt-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .item-name {
+    font-weight: bold;
+  }
+  
+  .total-price {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #e74c3c;
+  }
+  
+  .print-btn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .print-btn:hover {
+    background-color: #2ecc71;
+  }
+  

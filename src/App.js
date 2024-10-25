@@ -8,6 +8,7 @@ import Cart from './components/Cart'; // Importa la página del carrito
 import { auth } from './firebaseConfig';
 import { CartProvider } from './CartContext';
 import UploadProducto from './components/UploadProd';
+import Recibo from './components/Recibo';
 
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/cart" element={<Cart />} /> {/* Ruta para el carrito */}
           <Route path="/upload" element={<UploadProducto />} /> {/* Ruta para el carrito */}
+          <Route path="/recibo" element={<Recibo />} /> {/* Ruta para el carrito */}
+
         </Routes>
       </Router>
     </CartProvider>
