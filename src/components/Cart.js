@@ -2,10 +2,12 @@ import React, { useContext } from 'react';
 import { CartContext } from '../CartContext';
 import { db } from '../firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';  // Importa useNavigate
 import '../styles/Cart.css';
 
 function Cart() {
   const { cart, removeFromCart, clearCart } = useContext(CartContext);
+  const navigate = useNavigate();  // Define el hook de navegación
 
   const handlePurchase = async () => {
     try {
@@ -21,7 +23,8 @@ function Cart() {
         }
       }
 
-      alert('Compra realizada con éxito');
+      // Compra realizada, redirigir al recibo
+      navigate('/recibo', { state: { cart } }); // Pasar el carrito al recibo
       clearCart();
     } catch (error) {
       console.error('Error al realizar la compra:', error);
