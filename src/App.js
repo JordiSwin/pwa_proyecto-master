@@ -9,6 +9,10 @@ import { auth } from './firebaseConfig';
 import { CartProvider } from './CartContext';
 import UploadProducto from './components/UploadProd';
 import Recibo from './components/Recibo';
+import EditarProducto from './components/EditProd';
+import TablaProductos from './components/ProductTable';
+import DetallesProducto from './components/ProductDetail';
+
 
 
 function App() {
@@ -30,9 +34,15 @@ function App() {
           <Route path="/" element={user ? <Home /> : <Navigate to="/login" replace />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart />} /> {/* Ruta para el carrito */}
-          <Route path="/upload" element={<UploadProducto />} /> {/* Ruta para el carrito */}
-          <Route path="/recibo" element={<Recibo />} /> {/* Ruta para el carrito */}
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/upload" element={<UploadProducto />} />
+          <Route path="/recibo" element={<Recibo />} /> 
+          <Route path="/editarproducto" element={<EditarProducto />} /> 
+          <Route path="/tablaproductos" element={<TablaProductos />} /> 
+          <Route path="/Detalles del producto" element={<DetallesProducto />} /> 
+
+
+
 
         </Routes>
       </Router>

@@ -1,0 +1,24 @@
+.product-detail {
+    display: flex;
+    padding: 20px;
+  }
+  
+  .product-detail-image {
+    width: 300px;
+    height: auto;
+    margin-right: 20px;
+  }
+  
+  .product-detail-info {
+    max-width: 500px;
+  }
+  
+  .add-to-cart-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  

@@ -10,6 +10,7 @@ function Home() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState({}); // Estado para manejar la cantidad por producto
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,8 +32,6 @@ function Home() {
     fetchProducts();
   }, []);
 
-  const [quantity, setQuantity] = useState({}); // Estado para manejar la cantidad por producto
-
   const handleQuantityChange = (productId, value) => {
     setQuantity({
       ...quantity,
@@ -50,8 +49,12 @@ function Home() {
     }
   };
 
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
   const renderProductCard = (product) => (
-    <div key={product.id} className="product-card">
+    <div key={product.id} className="product-card" onClick={() => handleProductClick(product.id)}>
       <img src={product.imageUrl} alt={product.name} className="product-image" />
       <h3>{product.name}</h3>
       <p>{product.description}</p>
@@ -62,11 +65,15 @@ function Home() {
         min="1"
         max={product.stock}
         value={quantity[product.id] || 1}
+        onClick={(e) => e.stopPropagation()} // Evitar que el clic redireccione
         onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value))}
       />
       <button
         className="add-to-cart-btn"
-        onClick={() => handleAddToCart(product)}
+        onClick={(e) => {
+          e.stopPropagation(); // Evitar que el clic redireccione
+          handleAddToCart(product);
+        }}
         disabled={product.stock <= 0}
       >
         {product.stock <= 0 ? 'Agotado' : 'Agregar al Carrito'}
@@ -105,5 +112,3 @@ function Home() {
 }
 
 export default Home;
-
-
