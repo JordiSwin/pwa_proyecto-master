@@ -1,36 +1,32 @@
 .home-container {
+  width: 100%;
   padding: 20px;
 }
 
 .banner {
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .banner-img {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  object-fit: cover;
 }
 
-.slider {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center; /* Centra los elementos en la línea */
-  margin-bottom: 40px;
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta las tarjetas a un tamaño estándar */
+  gap: 16px; /* Espacio entre las tarjetas */
 }
 
 .product-card {
-  flex: 0 1 200px; /* Cambiado a un tamaño fijo */
-  background-color: #fff;
+  background-color: #f9f9f9;
   border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: transform 0.2s ease-in-out;
-  margin: 10px; /* Agregado margen para separar las tarjetas */
+  transition: transform 0.3s ease;
 }
 
 .product-card:hover {
@@ -38,41 +34,21 @@
 }
 
 .product-image {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
 }
 
-.product-card h3 {
-  margin-bottom: 5px; /* Reducción de margen */
-  font-size: 1rem; /* Ajuste de tamaño de fuente */
-  color: #333;
-}
-
-.product-card p {
-  margin-bottom: 5px; /* Reducción de margen */
-  color: #666;
-}
-
-.product-card input {
-  width: 50px; /* Ajuste del ancho del input */
-  padding: 5px;
-  text-align: center;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
 .add-to-cart-btn {
-  padding: 8px 15px; /* Ajuste de padding */
   background-color: #28a745;
-  color: #fff;
+  color: white;
   border: none;
-  border-radius: 4px;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem; /* Ajuste del tamaño de la fuente */
-  transition: background-color 0.3s ease-in-out;
+  margin-top: 10px;
 }
 
 .add-to-cart-btn:disabled {
@@ -80,18 +56,6 @@
   cursor: not-allowed;
 }
 
-.add-to-cart-btn:not(:disabled):hover {
+.add-to-cart-btn:hover:enabled {
   background-color: #218838;
-}
-
-@media (max-width: 768px) {
-  .product-card {
-    flex: 0 1 150px; /* Cambiado a un tamaño fijo para pantallas medianas */
-  }
-}
-
-@media (max-width: 480px) {
-  .product-card {
-    flex: 0 1 100%; /* En móviles, las tarjetas ocuparán el 100% */
-  }
 }

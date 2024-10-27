@@ -1,61 +1,57 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
+import { useContext } from 'react';
 import { CartContext } from '../CartContext';
 import '../styles/ProductDetail.css';
 
 function ProductDetail() {
   const { productId } = useParams();
   const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const productRef = doc(db, 'productos', productId);
-      const productSnap = await getDoc(productRef);
-
-      if (productSnap.exists()) {
-        setProduct({ id: productId, ...productSnap.data() });
-      } else {
-        console.error("El producto no existe.");
+      try {
+        const productRef = doc(db, 'productos', productId);
+        const productSnapshot = await getDoc(productRef);
+        if (productSnapshot.exists()) {
+          setProduct({ id: productSnapshot.id, ...productSnapshot.data() });
+        } else {
+          navigate('/'); // Redirigir si el producto no existe
+        }
+      } catch (error) {
+        console.error('Error al obtener el producto:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProduct();
-  }, [productId]);
+  }, [productId, navigate]);
 
-  const handleAddToCart = () => {
-    addToCart({ ...product, quantity });
-    alert(`Se agregó ${quantity} unidad(es) de ${product.name} al carrito`);
-  };
-
-  if (!product) {
-    return <p>Cargando producto...</p>;
-  }
+  if (loading) return <p>Cargando...</p>;
+  if (!product) return <p>Producto no encontrado</p>;
 
   return (
-    <div className="product-detail">
-      <img src={product.imageUrl} alt={product.name} className="product-detail-image" />
-      <div className="product-detail-info">
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>Precio: ${product.price}</p>
-        <p>Stock: {product.stock}</p>
-        <input
-          type="number"
-          min="1"
-          max={product.stock}
-          value={quantity}
-          onChange={(e) => setQuantity(Math.min(Math.max(1, parseInt(e.target.value)), product.stock))}
-        />
-        <button
-          className="add-to-cart-btn"
-          onClick={handleAddToCart}
+    <div className="product-detail-container">
+      <div className="product-image-section">
+        <img src={product.imageUrl} alt={product.name} className="product-image" />
+      </div>
+      <div className="product-details-section">
+        <h1 className="product-title">{product.name}</h1>
+        <p className="product-price">Precio: ${product.price}</p>
+        <p className="product-stock">Stock disponible: {product.stock}</p>
+        <p className="product-description">{product.description}</p>
+        <button 
+          className="add-to-cart-btn" 
+          onClick={() => addToCart({ ...product, quantity: 1 })}
           disabled={product.stock <= 0}
         >
-          {product.stock <= 0 ? 'Agotado' : 'Agregar al Carrito'}
+          {product.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
         </button>
       </div>
     </div>

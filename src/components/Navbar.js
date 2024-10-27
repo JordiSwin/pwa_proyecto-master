@@ -37,6 +37,10 @@ function Navbar() {
             <button onClick={() => navigate('/upload')} className="navbar-btn upload-btn">
               ➕ Subir Producto
             </button>
+            {/* Botón para ver la tabla de productos */}
+            <button onClick={() => navigate('/tablaproductos')} className="navbar-btn product-table-btn">
+              🛍️ Ver Tabla de Productos
+            </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión
             </button>

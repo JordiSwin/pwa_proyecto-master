@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -12,8 +12,7 @@ import Recibo from './components/Recibo';
 import EditarProducto from './components/EditProd';
 import TablaProductos from './components/ProductTable';
 import DetallesProducto from './components/ProductDetail';
-
-
+import ProtectedRoute from './components/security/ProtectedRoute'; // Importa el componente de rutas protegidas
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,19 +30,62 @@ function App() {
       <Router>
         <Navbar /> {/* Componente de navegación */}
         <Routes>
-          <Route path="/" element={user ? <Home /> : <Navigate to="/login" replace />} />
+          {/* La ruta de inicio es pública */}
+          <Route path="/" element={<Home />} />
+
+          {/* Las rutas públicas como login y registro */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/upload" element={<UploadProducto />} />
-          <Route path="/recibo" element={<Recibo />} /> 
-          <Route path="/editarproducto" element={<EditarProducto />} /> 
-          <Route path="/tablaproductos" element={<TablaProductos />} /> 
-          <Route path="/Detalles del producto" element={<DetallesProducto />} /> 
 
-
-
-
+          {/* Rutas protegidas con alerta */}
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute user={user}>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute user={user}>
+                <UploadProducto />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recibo"
+            element={
+              <ProtectedRoute user={user}>
+                <Recibo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editarproducto/:productId"
+            element={
+              <ProtectedRoute user={user}>
+                <EditarProducto />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tablaproductos"
+            element={
+              <ProtectedRoute user={user}>
+                <TablaProductos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/product/:productId"
+            element={
+              <ProtectedRoute user={user}>
+                <DetallesProducto />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </CartProvider>
