@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -13,6 +13,7 @@ import ProductDetails from './pages/ProductDetails'; // Importar el componente d
 import { auth, db } from './firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { CartProvider } from './CartContext';
+
 
 function App() {
   const [user, setUser] = useState(null);
