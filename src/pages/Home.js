@@ -12,6 +12,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState({}); // Estado para manejar la cantidad seleccionada
+  const [userEmail, setUserEmail] = useState(''); // Estado para guardar el correo del usuario
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,9 +31,12 @@ function Home() {
       }
     };
 
-    const checkAdmin = async () => {
+    const checkAdminAndUser = async () => {
       const currentUser = auth.currentUser;
       if (currentUser) {
+        // Setear el correo del usuario
+        setUserEmail(currentUser.email);
+
         const userRef = doc(db, 'usuarios', currentUser.uid);
         const userSnapshot = await getDoc(userRef);
         if (userSnapshot.exists() && userSnapshot.data().role === 'admin') {
@@ -42,7 +46,7 @@ function Home() {
     };
 
     fetchProducts();
-    checkAdmin();
+    checkAdminAndUser();
   }, []);
 
   const handleAddToCart = (product) => {
@@ -84,6 +88,13 @@ function Home() {
         <p>Cargando productos...</p>
       ) : (
         <div>
+          {/* Mostrar mensaje de bienvenida */}
+          {userEmail && (
+            <div className="welcome-message">
+              <h2>Bienvenido, {userEmail}</h2>
+            </div>
+          )}
+
           <h2>Todos los Productos</h2>
           <div className="products-list">
             {products.map((product) => (

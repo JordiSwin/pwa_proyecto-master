@@ -37,6 +37,7 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
+    "jspdf-autotable": "^3.8.4",
     "mini-css-extract-plugin": "^2.4.5",
     "mongoose": "^8.7.2",
     "paypal-checkout": "^4.0.344",

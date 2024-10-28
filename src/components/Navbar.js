@@ -37,9 +37,14 @@ function Navbar({ user, isAdmin }) {
 
         {/* Mostrar el botón para agregar productos solo para administradores */}
         {isAdmin && (
-          <button onClick={() => navigate('/upload-product')} className="navbar-btn upload-btn">
+          <><button onClick={() => navigate('/upload-product')} className="navbar-btn upload-btn">
             ➕ Subir Producto
-          </button>
+          </button><button onClick={() => navigate('/Ver Productos')} className="navbar-btn profile-btn">
+              Ver prodcts
+            </button></>
+
+          
+          
         )}
 
         {/* Mostrar botones de inicio de sesión, registro, y perfil basado en el estado de autenticación */}
@@ -47,10 +52,6 @@ function Navbar({ user, isAdmin }) {
           <>
             <button onClick={() => navigate('/edit-profile')} className="navbar-btn profile-btn">
               Editar Perfil
-            </button>
-            {/* Botón para ver la tabla de productos */}
-            <button onClick={() => navigate('/tablaproductos')} className="navbar-btn product-table-btn">
-              🛍️ Ver Tabla de Productos
             </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión

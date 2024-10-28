@@ -37,7 +37,7 @@ function ProductTable() {
   };
 
   const handleEdit = (productId) => {
-    navigate(`/editarproducto/${productId}`);
+    navigate(`/edit-product/${productId}`);
   };
 
   return (

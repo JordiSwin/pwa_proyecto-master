@@ -14,6 +14,9 @@ function AdminPanel() {
       <button onClick={() => navigate('/edit-products')} className="admin-btn">
         Editar Productos
       </button>
+      <button onClick={() => handleNavigation('/Ver Productos')} className="navbar-btn upload-btn">
+              ➕ Subir Producto
+            </button>
       <button onClick={() => navigate('/manage-comments')} className="admin-btn">
         Administrar Comentarios
       </button>

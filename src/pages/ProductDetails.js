@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { auth, db } from '../firebaseConfig';
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { CartContext } from '../CartContext'; // Usamos el contexto del carrito
 import '../styles/ProductDetails.css';
+import { updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'; // Asegúrate de importar estas funciones
+
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -11,7 +14,10 @@ function ProductDetails() {
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(1);
   const [averageRating, setAverageRating] = useState(0);
+  const [quantity, setQuantity] = useState(1); // Estado para la cantidad
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const { addToCart } = useContext(CartContext); // Contexto del carrito
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -136,6 +142,33 @@ function ProductDetails() {
     }
   };
 
+  const handleAddToCart = () => {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      alert('Debes iniciar sesión para agregar productos al carrito');
+      return;
+    }
+
+    if (quantity < 1 || quantity > product.stock) {
+      alert('Cantidad no válida');
+      return;
+    }
+
+    // Aquí utilizamos la lógica de agregar al carrito usando el contexto `CartContext`
+    const productToAdd = {
+      id: productId,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl, // Aseguramos que se mantenga la imagen
+      quantity: parseInt(quantity, 10),
+    };
+
+    addToCart(productToAdd); // Usamos la función del contexto del carrito para agregar
+
+    alert(`Has agregado ${quantity} unidad(es) de ${product.name} al carrito!`);
+  };
+
   if (loading) {
     return <p>Cargando detalles del producto...</p>;
   }
@@ -156,6 +189,20 @@ function ProductDetails() {
         {/* Mostrar el promedio de calificaciones */}
         <div className="average-rating">
           <h3>Calificación Promedio: {averageRating} ⭐</h3>
+        </div>
+
+        {/* Sección para seleccionar la cantidad */}
+        <div className="add-to-cart">
+          <label htmlFor="quantity">Cantidad:</label>
+          <input
+            type="number"
+            id="quantity"
+            value={quantity}
+            min="1"
+            max={product.stock}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+          <button onClick={handleAddToCart}>Agregar al Carrito</button>
         </div>
 
         {/* Sección para agregar comentarios y calificaciones */}
