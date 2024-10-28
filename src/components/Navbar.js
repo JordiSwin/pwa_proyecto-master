@@ -4,18 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../CartContext';
 import '../styles/Navbar.css';
 
-function Navbar() {
+function Navbar({ user, isAdmin }) {
   const navigate = useNavigate();
   const { cart } = useContext(CartContext);
 
-  // Calcular el total de productos en el carrito
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
+  // Función para cerrar la sesión
   const handleLogout = async () => {
     try {
       await auth.signOut();
       alert('Has cerrado sesión correctamente');
-      navigate('/login');
+      navigate('/login'); // Redirige al usuario a la página de inicio de sesión
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       alert('Hubo un error al cerrar sesión');
@@ -27,15 +25,28 @@ function Navbar() {
       <div className="navbar-logo" onClick={() => navigate('/')}>
         <h2>Mi Tienda PWA</h2>
       </div>
+
       <div className="navbar-buttons">
-        {auth.currentUser ? (
+        {/* Mostrar el botón del carrito siempre que el usuario esté autenticado */}
+        {user && (
+          <div className="navbar-cart" onClick={() => navigate('/cart')}>
+            🛒
+            {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
+          </div>
+        )}
+
+        {/* Mostrar el botón para agregar productos solo para administradores */}
+        {isAdmin && (
+          <button onClick={() => navigate('/upload-product')} className="navbar-btn upload-btn">
+            ➕ Subir Producto
+          </button>
+        )}
+
+        {/* Mostrar botones de inicio de sesión, registro, y perfil basado en el estado de autenticación */}
+        {user ? (
           <>
-            <button onClick={() => navigate('/cart')} className="navbar-btn cart-btn">
-              🛒 ({totalItems})
-            </button>
-            {/* Botón para redirigir al formulario de productos */}
-            <button onClick={() => navigate('/upload')} className="navbar-btn upload-btn">
-              ➕ Subir Producto
+            <button onClick={() => navigate('/edit-profile')} className="navbar-btn profile-btn">
+              Editar Perfil
             </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión

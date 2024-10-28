@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css'; 
+import '../styles/Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,12 +12,16 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
+      // Iniciar sesión con Firebase Authentication
       await signInWithEmailAndPassword(auth, email, password);
       alert('Inicio de sesión exitoso');
+
+      // Redirigir al usuario a la página de inicio después del inicio de sesión
       navigate('/');
     } catch (err) {
-      setError(err.message);
+      setError('Correo electrónico o contraseña incorrectos');
     }
   };
 

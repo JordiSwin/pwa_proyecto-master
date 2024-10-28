@@ -17,6 +17,7 @@
 .navbar-buttons {
   display: flex;
   gap: 10px;
+  align-items: center; /* Alinear verticalmente los elementos */
 }
 
 .navbar-btn {
@@ -33,8 +34,20 @@
   background-color: #0056b3;
 }
 
-.cart-btn {
-  background-color: #28a745;
+.profile-btn {
+  background-color: #17a2b8;
+}
+
+.profile-btn:hover {
+  background-color: #138496;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
 }
 
 .upload-btn {
@@ -45,10 +58,20 @@
   background-color: #e0a800;
 }
 
-.logout-btn {
-  background-color: #dc3545;
+.navbar-cart {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px; /* Tamaño del ícono del carrito */
 }
 
-.logout-btn:hover {
-  background-color: #c82333;
+.cart-count {
+  position: absolute;
+  top: -8px; /* Ajustar para posicionar encima del ícono del carrito */
+  right: -10px; /* Ajustar para posicionar a la derecha del ícono */
+  background-color: #dc3545;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
 }
