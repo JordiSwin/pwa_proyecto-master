@@ -10,6 +10,7 @@ import EditProfile from './components/EditProfile';
 import Cart from './components/Cart';
 import Receipt from './components/Recibo'; // Corregido el nombre del componente
 import ProductDetails from './pages/ProductDetails'; // Importar el componente de detalles de productos
+import Tabla from './components/ProductTable';
 import { auth, db } from './firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { CartProvider } from './CartContext';
@@ -62,6 +63,8 @@ function App() {
           <Route path="/productos/:productId" element={<ProductDetails />} /> {/* Agregar la ruta para detalles de productos */}
           <Route path="/product-details/:productId" element={<ProductDetails />} />
           <Route path="/edit-profile" element={user ? <EditProfile /> : <Navigate to="/login" replace />} /> {/* Ruta de editar perfil */}
+          <Route path="/Ver Productos" element={<Tabla />} />
+
         </Routes>
       </Router>
     </CartProvider>
