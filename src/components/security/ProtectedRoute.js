@@ -1,12 +1,11 @@
-import { Navigate } from 'react-router-dom';
-import { auth } from '../../firebaseConfig'; // Firebase authentication
+import React from 'react';
 
-function ProtectedRoute({ children }) {
-  if (!auth.currentUser) {
-    return <Navigate to="/login" />; // Redirige a login si no está autenticado
+const ProtectedRoute = ({ user, children }) => {
+  if (!user) {
+    alert("Necesitas iniciar sesión para ver esta página.");
+    return null;  // Retorna null para evitar renderizar la página si no está autenticado
   }
-
-  return children; // Renderiza el componente hijo si está autenticado
-}
+  return children; // Renderiza los hijos si el usuario está autenticado
+};
 
 export default ProtectedRoute;

@@ -48,6 +48,10 @@ function Navbar({ user, isAdmin }) {
             <button onClick={() => navigate('/edit-profile')} className="navbar-btn profile-btn">
               Editar Perfil
             </button>
+            {/* Botón para ver la tabla de productos */}
+            <button onClick={() => navigate('/tablaproductos')} className="navbar-btn product-table-btn">
+              🛍️ Ver Tabla de Productos
+            </button>
             <button onClick={handleLogout} className="navbar-btn logout-btn">
               Cerrar Sesión
             </button>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -48,7 +48,10 @@ function App() {
       <Router>
         <Navbar user={user} isAdmin={isAdmin} />
         <Routes>
-          <Route path="/" element={user ? <Home /> : <Navigate to="/login" replace />} />
+          {/* La ruta de inicio es pública */}
+          <Route path="/" element={<Home />} />
+
+          {/* Las rutas públicas como login y registro */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cart" element={user ? <Cart /> : <Navigate to="/login" replace />} />
