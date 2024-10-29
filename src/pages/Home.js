@@ -11,8 +11,8 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [selectedQuantity, setSelectedQuantity] = useState({}); // Estado para manejar la cantidad seleccionada
-  const [userEmail, setUserEmail] = useState(''); // Estado para guardar el correo del usuario
+  const [selectedQuantity, setSelectedQuantity] = useState({});
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,7 +34,6 @@ function Home() {
     const checkAdminAndUser = async () => {
       const currentUser = auth.currentUser;
       if (currentUser) {
-        // Setear el correo del usuario
         setUserEmail(currentUser.email);
 
         const userRef = doc(db, 'usuarios', currentUser.uid);
@@ -50,7 +49,7 @@ function Home() {
   }, []);
 
   const handleAddToCart = (product) => {
-    const quantity = selectedQuantity[product.id] || 1; // Obtener la cantidad seleccionada (predeterminada a 1)
+    const quantity = selectedQuantity[product.id] || 1;
     if (!auth.currentUser) {
       navigate('/login');
     } else if (quantity > product.stock) {
@@ -64,7 +63,7 @@ function Home() {
   const handleQuantityChange = (productId, value) => {
     setSelectedQuantity((prev) => ({
       ...prev,
-      [productId]: parseInt(value, 10),
+      [productId]: parseInt(value, 10) || 1,
     }));
   };
 
@@ -88,7 +87,7 @@ function Home() {
         <p>Cargando productos...</p>
       ) : (
         <div>
-          {/* Mostrar mensaje de bienvenida */}
+          {/* Mensaje de bienvenida */}
           {userEmail && (
             <div className="welcome-message">
               <h2>Bienvenido, {userEmail}</h2>
@@ -118,14 +117,14 @@ function Home() {
                     value={selectedQuantity[product.id] || 1}
                     min="1"
                     max={product.stock}
-                    onClick={(e) => e.stopPropagation()} // Evitar navegación al hacer clic en el input
+                    onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleQuantityChange(product.id, e.target.value)}
                   />
                 </div>
 
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Evitar la navegación al hacer clic en el botón
+                    e.stopPropagation();
                     handleAddToCart(product);
                   }}
                   disabled={product.stock <= 0}
@@ -137,7 +136,7 @@ function Home() {
                   <div className="admin-buttons">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // Evitar la navegación al hacer clic en el botón
+                        e.stopPropagation();
                         navigate(`/edit-product/${product.id}`);
                       }}
                     >
@@ -145,7 +144,7 @@ function Home() {
                     </button>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // Evitar la navegación al hacer clic en el botón
+                        e.stopPropagation();
                         handleDeleteProduct(product.id);
                       }}
                     >
@@ -157,6 +156,7 @@ function Home() {
             ))}
           </div>
 
+          {/* Mostrar productos por categoría */}
           {categories.map((category) => (
             <div key={category}>
               <h2>{category}</h2>
@@ -184,14 +184,14 @@ function Home() {
                           value={selectedQuantity[product.id] || 1}
                           min="1"
                           max={product.stock}
-                          onClick={(e) => e.stopPropagation()} // Evitar navegación al hacer clic en el input
+                          onClick={(e) => e.stopPropagation()}
                           onChange={(e) => handleQuantityChange(product.id, e.target.value)}
                         />
                       </div>
 
                       <button
                         onClick={(e) => {
-                          e.stopPropagation(); // Evitar la navegación al hacer clic en el botón
+                          e.stopPropagation();
                           handleAddToCart(product);
                         }}
                         disabled={product.stock <= 0}
@@ -203,7 +203,7 @@ function Home() {
                         <div className="admin-buttons">
                           <button
                             onClick={(e) => {
-                              e.stopPropagation(); // Evitar la navegación al hacer clic en el botón
+                              e.stopPropagation();
                               navigate(`/edit-product/${product.id}`);
                             }}
                           >
@@ -211,7 +211,7 @@ function Home() {
                           </button>
                           <button
                             onClick={(e) => {
-                              e.stopPropagation(); // Evitar la navegación al hacer clic en el botón
+                              e.stopPropagation();
                               handleDeleteProduct(product.id);
                             }}
                           >

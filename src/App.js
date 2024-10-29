@@ -24,26 +24,20 @@ function App() {
     const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Verificar si el usuario es admin
-        try {
-          const userRef = doc(db, 'usuarios', currentUser.uid);
-          const docSnap = await getDoc(userRef);
-          if (docSnap.exists() && docSnap.data().role === 'admin') {
-            setIsAdmin(true);
-          } else {
-            setIsAdmin(false);
-          }
-        } catch (error) {
-          console.error('Error al verificar el rol del usuario:', error);
+        const userRef = doc(db, 'usuarios', currentUser.uid);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists() && docSnap.data().role === 'admin') {
+          setIsAdmin(true);
+        } else {
           setIsAdmin(false);
         }
       } else {
         setIsAdmin(false);
       }
     });
-
     return () => unsubscribe();
   }, []);
+
 
   return (
     <CartProvider>
