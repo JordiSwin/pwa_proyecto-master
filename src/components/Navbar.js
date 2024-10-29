@@ -40,7 +40,7 @@ function Navbar({ user, isAdmin }) {
           <><button onClick={() => navigate('/upload-product')} className="navbar-btn upload-btn">
             ➕ Subir Producto
           </button><button onClick={() => navigate('/Ver Productos')} className="navbar-btn profile-btn">
-              Ver productos
+              Ver productotes
             </button></>
 
           
