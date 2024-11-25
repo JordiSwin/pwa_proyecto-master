@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../CartContext';
 import { auth, db } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, deleteDoc, query, orderBy, limit } from 'firebase/firestore';
 import '../styles/Home.css';
 
 function Home() {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [bestSellers, setBestSellers] = useState([]); // Mover aquí el estado
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState({});
@@ -46,6 +47,30 @@ function Home() {
 
     fetchProducts();
     checkAdminAndUser();
+  }, []);
+
+  // Nuevo useEffect para los más vendidos
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        const productsCollection = collection(db, 'productos');
+        const bestSellersQuery = query(
+          productsCollection,
+          orderBy('sales', 'desc'),
+          limit(5) // Mostrar los 5 productos más vendidos
+        );
+        const bestSellersSnapshot = await getDocs(bestSellersQuery);
+        const bestSellersList = bestSellersSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setBestSellers(bestSellersList);
+      } catch (error) {
+        console.error('Error al obtener los productos más vendidos:', error);
+      }
+    };
+
+    fetchBestSellers();
   }, []);
 
   const handleAddToCart = (product) => {
@@ -87,13 +112,43 @@ function Home() {
         <p>Cargando productos...</p>
       ) : (
         <div>
-          {/* Mensaje de bienvenida */}
           {userEmail && (
             <div className="welcome-message">
               <h2>Bienvenido, {userEmail}</h2>
             </div>
           )}
 
+          {/* Productos más vendidos */}
+          <div className="best-sellers-section">
+            <h2>Productos Más Vendidos</h2>
+            <div className="products-list">
+              {bestSellers.map((product) => (
+                <div
+                  key={product.id}
+                  className="product-card"
+                  onClick={() => navigate(`/product-details/${product.id}`)}
+                >
+                  <img src={product.imageUrl} alt={product.name} />
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <p>Precio: ${product.price}</p>
+                  <p>Stock: {product.stock}</p>
+                  <p>Ventas: {product.sales || 0}</p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                    disabled={product.stock <= 0}
+                  >
+                    Agregar al Carrito
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Todos los productos */}
           <h2>Todos los Productos</h2>
           <div className="products-list">
             {products.map((product) => (
@@ -107,8 +162,6 @@ function Home() {
                 <p>{product.description}</p>
                 <p>Precio: ${product.price}</p>
                 <p>Stock: {product.stock}</p>
-
-                {/* Selección de cantidad */}
                 <div className="quantity-selector">
                   <label htmlFor={`quantity-${product.id}`}>Cantidad:</label>
                   <input
@@ -121,7 +174,6 @@ function Home() {
                     onChange={(e) => handleQuantityChange(product.id, e.target.value)}
                   />
                 </div>
-
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -156,7 +208,7 @@ function Home() {
             ))}
           </div>
 
-          {/* Mostrar productos por categoría */}
+          {/* Categorías */}
           {categories.map((category) => (
             <div key={category}>
               <h2>{category}</h2>
@@ -174,8 +226,6 @@ function Home() {
                       <p>{product.description}</p>
                       <p>Precio: ${product.price}</p>
                       <p>Stock: {product.stock}</p>
-
-                      {/* Selección de cantidad */}
                       <div className="quantity-selector">
                         <label htmlFor={`quantity-${product.id}`}>Cantidad:</label>
                         <input
@@ -188,7 +238,6 @@ function Home() {
                           onChange={(e) => handleQuantityChange(product.id, e.target.value)}
                         />
                       </div>
-
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

@@ -67,3 +67,16 @@
 .delete-product-btn:hover {
   background-color: #c82333;
 }
+
+.best-sellers-section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.best-sellers-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+

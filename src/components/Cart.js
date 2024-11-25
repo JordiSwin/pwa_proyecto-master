@@ -16,7 +16,14 @@ function Cart() {
         const newStock = product.stock - product.quantity;
 
         if (newStock >= 0) {
+          // Actualizar el stock
           await updateDoc(productRef, { stock: newStock });
+
+          // Incrementar el campo "sales"
+          const incrementSales = product.quantity;
+          await updateDoc(productRef, {
+            sales: (product.sales || 0) + incrementSales, // Incrementar o inicializar ventas
+          });
         } else {
           alert(`No hay suficiente stock para ${product.name}`);
           return;
@@ -31,6 +38,7 @@ function Cart() {
       alert('Hubo un error al realizar la compra');
     }
   };
+
 
   return (
     <div className="cart-container">
