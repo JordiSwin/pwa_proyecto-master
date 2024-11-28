@@ -69,6 +69,8 @@ function Home() {
     } else if (quantity > product.stock) {
       alert(`No hay suficiente stock para ${product.name}`);
     } else {
+      console.log(product);
+      console.log(quantity);
       addToCart({ ...product, quantity });
       alert(`Se agregó ${quantity} unidad(es) de ${product.name} al carrito`);
     }
