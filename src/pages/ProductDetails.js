@@ -175,7 +175,7 @@ function ProductDetails() {
 
       alert('Comentario eliminado con éxito');
     } catch (error) {
-      console.error('Error al eliminar el comentario:', error);
+      console.error('Error al eliminar el comentario: ', error);
       alert('Hubo un error al eliminar el comentario');
     }
   };
