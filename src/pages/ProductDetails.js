@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { auth, db } from '../firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, deleteDoc, query, orderBy, limit } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+
 import { CartContext } from '../CartContext'; // Usamos el contexto del carrito
 import '../styles/ProductDetails.css';
 import { updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
@@ -15,11 +17,38 @@ function ProductDetails() {
   const [averageRating, setAverageRating] = useState(0);
   const [quantity, setQuantity] = useState(1); // Estado para la cantidad
   const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
+  const [bestSellers, setBestSellers] = useState([]); // Mover aquí el estado
 
   const { addToCart } = useContext(CartContext); // Contexto del carrito
 
   const [showFullDescription, setShowFullDescription] = useState(false); // Nuevo estado para controlar la descripción
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
+
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        const productsCollection = collection(db, 'productos');
+        const bestSellersQuery = query(
+          productsCollection,
+          orderBy('sales', 'desc'),
+          limit(5) // Mostrar los 5 productos más vendidos
+        );
+        const bestSellersSnapshot = await getDocs(bestSellersQuery);
+        const bestSellersList = bestSellersSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setBestSellers(bestSellersList);
+      } catch (error) {
+        console.error('Error al obtener los productos más vendidos:', error);
+      }
+    };
+
+    fetchBestSellers();
+  }, []);
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -269,22 +298,34 @@ function ProductDetails() {
         </form>
       </div>
 
-      <div className="product-reviews">
-        <h3>Reseñas del Producto</h3>
-        {product.reviews && product.reviews.length > 0 ? (
-          product.reviews.map((review, index) => (
-            <div key={index} className="review">
-              <p><strong>{review.user}:</strong> {review.comment}</p>
-              <p>Calificación: {review.rating} ⭐</p>
-              {isAdmin && (
-                <button onClick={() => handleDeleteComment(review)}>Eliminar Comentario</button>
-              )}
+      <div className="best-sellers-section">
+            <h2>Productos Más Vendidos</h2>
+            <div className="products-list">
+              {bestSellers.map((product) => (
+                <div
+                  key={product.id}
+                  className="product-card"
+                  onClick={() => navigate(`/product-details/${product.id}`)}
+                >
+                  <img src={product.imageUrl} alt={product.name} />
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <p>Precio: ${product.price}</p>
+                  <p>Stock: {product.stock}</p>
+                  <p>Ventas: {product.sales || 0}</p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                    disabled={product.stock <= 0}
+                  >
+                    Agregar al Carrito
+                  </button>
+                </div>
+              ))}
             </div>
-          ))
-        ) : (
-          <p>No hay comentarios aún.</p>
-        )}
-      </div>
+          </div>
     </div>
   );
 }
