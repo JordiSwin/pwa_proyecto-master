@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ProtectedRoute = ({ user, children }) => {
+const ProtectedRoute = ({ user, children, fallbackComponent }) => {
   if (!user) {
-    alert("Necesitas iniciar sesión para ver esta página.");
-    return null;  // Retorna null para evitar renderizar la página si no está autenticado
+    // Renderiza un componente alternativo si no está autenticado
+    return fallbackComponent || <p>Debes iniciar sesión para acceder a esta sección.</p>;
   }
   return children; // Renderiza los hijos si el usuario está autenticado
 };

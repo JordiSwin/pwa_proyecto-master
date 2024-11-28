@@ -50,6 +50,7 @@ function ProductTable() {
             <th>Descripción</th>
             <th>Precio</th>
             <th>Stock</th>
+            <th>Tipo de Producto</th> {/* Nueva columna para el tipo de producto */}
             <th>Acciones</th>
           </tr>
         </thead>
@@ -60,6 +61,7 @@ function ProductTable() {
               <td>{product.description}</td>
               <td>${product.price}</td>
               <td>{product.stock}</td>
+              <td>{product.category}</td> {/* Mostrar la categoría del producto */}
               <td>
                 <button onClick={() => handleEdit(product.id)} className="edit-btn">
                   Editar

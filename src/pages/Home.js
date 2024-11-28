@@ -31,23 +31,10 @@ function Home() {
         setLoading(false);
       }
     };
-
-    const checkAdminAndUser = async () => {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        setUserEmail(currentUser.email);
-
-        const userRef = doc(db, 'usuarios', currentUser.uid);
-        const userSnapshot = await getDoc(userRef);
-        if (userSnapshot.exists() && userSnapshot.data().role === 'admin') {
-          setIsAdmin(true);
-        }
-      }
-    };
-
+  
     fetchProducts();
-    checkAdminAndUser();
   }, []);
+  
 
   // Nuevo useEffect para los más vendidos
   useEffect(() => {
@@ -75,7 +62,9 @@ function Home() {
 
   const handleAddToCart = (product) => {
     const quantity = selectedQuantity[product.id] || 1;
+    
     if (!auth.currentUser) {
+      // Si no está logueado, redirige a la página de login
       navigate('/login');
     } else if (quantity > product.stock) {
       alert(`No hay suficiente stock para ${product.name}`);
@@ -84,6 +73,7 @@ function Home() {
       alert(`Se agregó ${quantity} unidad(es) de ${product.name} al carrito`);
     }
   };
+  
 
   const handleQuantityChange = (productId, value) => {
     setSelectedQuantity((prev) => ({

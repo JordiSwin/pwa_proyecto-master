@@ -8,13 +8,13 @@ import UploadProd from './components/UploadProd';
 import EditProduct from './components/EditProduct';
 import EditProfile from './components/EditProfile'; 
 import Cart from './components/Cart';
-import Receipt from './components/Recibo'; // Corregido el nombre del componente
-import ProductDetails from './pages/ProductDetails'; // Importar el componente de detalles de productos
+import Receipt from './components/Recibo';
+import ProductDetails from './pages/ProductDetails';
 import Tabla from './components/ProductTable';
 import { auth, db } from './firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { CartProvider } from './CartContext';
-
+import ProtectedRoute from './components/security/ProtectedRoute'; // Importa el componente
 
 function App() {
   const [user, setUser] = useState(null);
@@ -38,7 +38,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-
   return (
     <CartProvider>
       <Router>
@@ -50,15 +49,61 @@ function App() {
           {/* Las rutas públicas como login y registro */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={user ? <Cart /> : <Navigate to="/login" replace />} />
-          <Route path="/recibo" element={user ? <Receipt /> : <Navigate to="/login" replace />} />
-          <Route path="/upload-product" element={isAdmin ? <UploadProd /> : <Navigate to="/" replace />} />
-          <Route path="/edit-product/:productId" element={isAdmin ? <EditProduct /> : <Navigate to="/" replace />} />
-          <Route path="/productos/:productId" element={<ProductDetails />} /> {/* Agregar la ruta para detalles de productos */}
-          <Route path="/product-details/:productId" element={<ProductDetails />} />
-          <Route path="/edit-profile" element={user ? <EditProfile /> : <Navigate to="/login" replace />} /> {/* Ruta de editar perfil */}
-          <Route path="/Ver Productos" element={<Tabla />} />
 
+          {/* Rutas protegidas para usuarios autenticados */}
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute user={user}>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/recibo"
+            element={
+              <ProtectedRoute user={user}>
+                <Receipt />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Rutas protegidas para administradores */}
+          <Route
+            path="/upload-product"
+            element={
+              <ProtectedRoute user={isAdmin}>
+                <UploadProd />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/edit-product/:productId"
+            element={
+              <ProtectedRoute user={isAdmin}>
+                <EditProduct />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Ruta pública para ver detalles del producto */}
+          <Route path="/productos/:productId" element={<ProductDetails />} />
+          <Route path="/product-details/:productId" element={<ProductDetails />} />
+
+          {/* Ruta protegida para editar el perfil */}
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute user={user}>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Tabla visible para todos los usuarios */}
+          <Route path="/Ver Productos" element={<Tabla />} />
         </Routes>
       </Router>
     </CartProvider>

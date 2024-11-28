@@ -1,45 +1,63 @@
-.home-container {
-  width: 100%;
-  padding: 20px;
-}
-
 .products-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: center; /* Centramos las tarjetas */
 }
 
 .product-card {
-  width: 200px; /* Ajustar el ancho de la tarjeta */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 200px; /* Ancho fijo de las tarjetas */
+  padding: 15px; /* Espaciado interno */
+  border: 1px solid #ddd; /* Borde ligero */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #fff; /* Fondo blanco */
+  text-align: center; /* Centrar contenido */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
 }
+
+.product-card:hover {
+  transform: scale(1.05); /* Efecto de agrandado al pasar el cursor */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}
+
 
 .product-card img {
   width: 100%;
-  height: 150px; /* Ajustar la altura de la imagen */
+  height: 150px; /* Mantén el tamaño de la imagen */
   object-fit: cover;
   border-radius: 8px;
 }
 
 .product-card h3 {
-  font-size: 16px; /* Reducir tamaño del texto */
-  margin: 10px 0 5px;
+  font-size: 18px; /* Tamaño del título */
+  font-weight: 600; /* Negrita ligera para destacar */
+  color: #333; /* Color oscuro y legible */
+  margin: 10px 0 5px; /* Espaciado adecuado alrededor del título */
+  text-align: center; /* Centrado horizontal */
+  overflow: hidden; /* Evitar desbordes */
+  text-overflow: ellipsis; /* Agregar puntos suspensivos si el texto es largo */
+  white-space: nowrap; /* Mantener el texto en una línea */
 }
 
 .product-card p {
-  font-size: 14px; /* Reducir tamaño del texto */
-  margin: 5px 0;
+  font-size: 14px; /* Tamaño del texto descriptivo */
+  color: #555; /* Color más claro para descripción */
+  margin: 0 0 10px; /* Espaciado inferior */
+  text-align: center; /* Centrado horizontal */
+  line-height: 1.4; /* Mejora de legibilidad */
+  overflow: hidden; /* Evitar desbordes */
+  text-overflow: ellipsis; /* Agregar puntos suspensivos si el texto es largo */
+  display: -webkit-box; /* Soporte para múltiples líneas */
+  -webkit-line-clamp: 2; /* Limitar a 2 líneas */
+  -webkit-box-orient: vertical; /* Orientación vertical para múltiples líneas */
 }
+
+
 
 .product-card button {
   padding: 8px 12px;
-  font-size: 14px; /* Ajustar tamaño del texto en el botón */
+  font-size: 14px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -53,30 +71,208 @@
   background-color: #0056b3;
 }
 
-.delete-product-btn {
-  background-color: #dc3545;
+
+
+/* Efecto "banner" cuando se llenen horizontalmente */
+@media (min-width: 768px) {
+  .products-list.full-row .product-card {
+    width: calc(33.33% - 20px); /* Ancho mayor cuando ocupan toda la fila */
+    transform: scale(1); /* Reinicia el escalado en este estado */
+    transition: width 0.3s ease;
+  }
+
+  .products-list.full-row .product-card:hover {
+    transform: translateY(-10px); /* Efecto sutil de levitar en hover */
+  }
+}
+
+.home-container {
+  width: 100%;
+  padding: 20px;
+}
+
+.content-container {
+  max-width: 1600px; /* Ajusta el ancho máximo del contenedor */
+  margin: 0 auto; /* Centra el contenedor */
+  padding: 20px; /* Espaciado interno para evitar que el contenido esté pegado a los bordes */
+  background-color: #fff; /* Fondo blanco para hacer que el contenido destaque */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Añade sombra ligera */
+}
+
+.products-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.product-card {
+  width: 200px; /* Tamaño estándar de las tarjetas */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Resto de los estilos para .product-card, imágenes, botones, etc. */
+
+
+/* Opcional: en pantallas más pequeñas, ajustar el diseño */
+@media (max-width: 768px) {
+  .products-list .product-card {
+    width: calc(50% - 20px); /* 2 cards por fila en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .products-list .product-card {
+    width: 100%; /* 1 card por fila en pantallas móviles */
+  }
+}
+
+
+/* Contenedor general del slider */
+.slider-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+/* Botones del slider */
+.slider-button {
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 5px 10px;
-  margin-top: 5px;
-  border-radius: 5px;
+  padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 18px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.delete-product-btn:hover {
-  background-color: #c82333;
+.prev-button {
+  left: 10px;
 }
 
-.best-sellers-section {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
+.next-button {
+  right: 10px;
 }
 
-.best-sellers-section h2 {
+.slider-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Contenedor del slider */
+.slider {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Pista del slider */
+.slider-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Tarjetas de producto dentro del slider */
+.product-card {
+  flex: 0 0 300px; /* Ancho fijo para cada tarjeta */
+  margin: 0 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-bottom: 20px;
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.product-card button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.product-card button:hover {
+  background-color: #0056b3;
+}
+
+/* Contenedor principal del slider */
+.slider-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* Pista del slider */
+.slider {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+}
+
+.slider-track {
+  display: flex;
+  gap: 20px;
+}
+
+.product-card {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 250px; /* Ajusta según el tamaño deseado */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* Botones del slider */
+.slider-button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.slider-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 

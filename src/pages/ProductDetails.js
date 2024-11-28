@@ -4,8 +4,7 @@ import { auth, db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { CartContext } from '../CartContext'; // Usamos el contexto del carrito
 import '../styles/ProductDetails.css';
-import { updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'; // Asegúrate de importar estas funciones
-
+import { updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -18,6 +17,9 @@ function ProductDetails() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { addToCart } = useContext(CartContext); // Contexto del carrito
+
+  const [showFullDescription, setShowFullDescription] = useState(false); // Nuevo estado para controlar la descripción
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -177,82 +179,111 @@ function ProductDetails() {
     return <p>Producto no encontrado.</p>;
   }
 
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="product-details-container">
-      <img src={product.imageUrl} alt={product.name} className="product-image" />
-      <div className="product-info">
-        <h2>{product.name}</h2>
-        <p className="product-description">{product.description}</p>
-        <p className="product-price">Precio: ${product.price}</p>
-        <p className="product-stock">Stock: {product.stock}</p>
+      <div className="product-main">
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          className="product-image"
+          onClick={openModal} // Abrir el modal al hacer clic
+          style={{ cursor: 'pointer' }} // Cambiar el cursor para indicar que es clickeable
+        />
+        <div className="product-info">
+          <h2>{product.name}</h2>
+          
+          {/* Mostrar descripción parcial o completa */}
+          <p className="product-description">
+            {showFullDescription ? product.description : `${product.description.substring(0, 100)}... `}
+            <span className="toggle-description" onClick={toggleDescription}>
+              {showFullDescription ? 'Mostrar menos' : 'Leer más'}
+            </span>
+          </p>
 
-        {/* Mostrar el promedio de calificaciones */}
-        <div className="average-rating">
-          <h3>Calificación Promedio: {averageRating} ⭐</h3>
-        </div>
+          <p className="product-price">Precio: ${product.price}</p>
+          <p className="product-stock">Stock: {product.stock}</p>
+          <div className="average-rating">
+            <h3>Calificación Promedio: {averageRating} ⭐</h3>
+          </div>
 
-        {/* Sección para seleccionar la cantidad */}
-        <div className="add-to-cart">
-          <label htmlFor="quantity">Cantidad:</label>
-          <input
-            type="number"
-            id="quantity"
-            value={quantity}
-            min="1"
-            max={product.stock}
-            onChange={(e) => setQuantity(e.target.value)}
-          />
-          <button onClick={handleAddToCart}>Agregar al Carrito</button>
-        </div>
-
-        {/* Sección para agregar comentarios y calificaciones */}
-        <div className="add-review">
-          <h3>Agregar Comentario y Calificación</h3>
-          <form onSubmit={handleCommentSubmit} className="review-form">
-            <textarea
-              placeholder="Escribe tu comentario..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              required
+          {/* Sección para agregar al carrito */}
+          <div className="add-to-cart">
+            <label htmlFor="quantity">Cantidad:</label>
+            <input
+              id="quantity"
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              min="1"
+              max={product.stock}
             />
-            <label htmlFor="rating">Calificación:</label>
-            <select
-              id="rating"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-            >
-              {[1, 2, 3, 4, 5].map((num) => (
-                <option key={num} value={num}>
-                  {num} ⭐
-                </option>
-              ))}
-            </select>
-            <button type="submit">Agregar Comentario</button>
-          </form>
+            <button onClick={handleAddToCart}>Agregar al Carrito</button>
+          </div>
         </div>
+      </div>
 
-        {/* Sección para mostrar comentarios y calificaciones */}
-        <div className="product-reviews">
-          <h3>Calificaciones y Comentarios</h3>
-          {product.reviews && product.reviews.length > 0 ? (
-            product.reviews.map((review, index) => (
-              <div key={index} className="review-item">
-                <p><strong>{review.user}</strong>: {review.comment}</p>
-                <p>Calificación: {review.rating} ⭐</p>
-                {isAdmin && (
-                  <button
-                    className="delete-comment-btn"
-                    onClick={() => handleDeleteComment(review)}
-                  >
-                    Eliminar Comentario
-                  </button>
-                )}
-              </div>
-            ))
-          ) : (
-            <p>No hay comentarios para este producto.</p>
-          )}
+      {/* Modal para mostrar la imagen ampliada */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content">
+            <span className="close-modal" onClick={closeModal}>&times;</span>
+            <img src={product.imageUrl} alt={product.name} className="modal-image" />
+          </div>
         </div>
+      )}
+
+      <div className="add-review">
+        <h3>Agregar Comentario y Calificación</h3>
+        <form onSubmit={handleCommentSubmit} className="review-form">
+          <textarea
+            placeholder="Escribe tu comentario..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            required
+          />
+          <label htmlFor="rating">Calificación:</label>
+          <select
+            id="rating"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+          >
+            {[1, 2, 3, 4, 5].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+          <button type="submit">Enviar Comentario</button>
+        </form>
+      </div>
+
+      <div className="product-reviews">
+        <h3>Reseñas del Producto</h3>
+        {product.reviews && product.reviews.length > 0 ? (
+          product.reviews.map((review, index) => (
+            <div key={index} className="review">
+              <p><strong>{review.user}:</strong> {review.comment}</p>
+              <p>Calificación: {review.rating} ⭐</p>
+              {isAdmin && (
+                <button onClick={() => handleDeleteComment(review)}>Eliminar Comentario</button>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No hay comentarios aún.</p>
+        )}
       </div>
     </div>
   );
