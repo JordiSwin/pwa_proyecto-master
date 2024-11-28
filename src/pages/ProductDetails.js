@@ -6,7 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { CartContext } from '../CartContext'; // Usamos el contexto del carrito
 import '../styles/ProductDetails.css';
+
 import { updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -94,48 +96,53 @@ function ProductDetails() {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-
+  
     const currentUser = auth.currentUser;
-
+  
     if (!currentUser) {
       alert('Debes iniciar sesión para agregar un comentario');
       return;
     }
-
+  
     if (!comment) {
       alert('Por favor, escribe un comentario');
       return;
     }
-
+  
     try {
       const userRef = doc(db, 'usuarios', currentUser.uid);
       const userSnapshot = await getDoc(userRef);
       const userName = userSnapshot.exists() ? userSnapshot.data().fullName : 'Usuario';
-
+  
       const productRef = doc(db, 'productos', productId);
       const newReview = {
         user: userName,
         comment,
         rating: parseInt(rating, 10),
       };
-
+  
+      // Actualizamos en Firebase
       await updateDoc(productRef, {
         reviews: arrayUnion(newReview),
       });
-
+  
+      // Actualizamos el estado de "product" con los nuevos comentarios
       setProduct((prevProduct) => {
         const updatedReviews = [...(prevProduct.reviews || []), newReview];
         const totalRating = updatedReviews.reduce((sum, review) => sum + review.rating, 0);
         const avgRating = totalRating / updatedReviews.length;
-
-        setAverageRating(avgRating.toFixed(1)); // Redondear a un decimal
-
+  
+        setAverageRating(avgRating.toFixed(1));
+  
         return {
           ...prevProduct,
           reviews: updatedReviews,
         };
       });
-
+  
+      // Verificar que el estado esté actualizado
+      console.log("Comentarios actualizados:", product.reviews);
+  
       setComment('');
       setRating(1);
       alert('Comentario agregado con éxito');
@@ -296,7 +303,28 @@ function ProductDetails() {
           </select>
           <button type="submit">Enviar Comentario</button>
         </form>
+        <div className="reviews-section">
+  <h3>Comentarios</h3>
+  {product.reviews && product.reviews.length > 0 ? (
+    <ul>
+      {product.reviews.map((review, index) => (
+        <li key={index}>
+          <strong>{review.user}</strong> (Calificación: {review.rating} ⭐)
+          <p>{review.comment}</p>
+          {isAdmin && (
+            <button onClick={() => handleDeleteComment(review)}>Eliminar</button>
+          )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No hay comentarios aún.</p>
+  )}
+</div>
       </div>
+
+
+
 
       <div className="best-sellers-section">
             <h2>Productos Más Vendidos</h2>
